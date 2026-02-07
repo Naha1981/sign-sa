@@ -1,0 +1,22 @@
+{
+    "GREETINGS": {
+        "HELLO": "assets/signs/hello.mp4",
+        "THANK_YOU": "assets/signs/thank_you.mp4"
+    },
+    "EMERGENCY": {
+        "DOCTOR": "assets/signs/doctor.mp4",
+        "HOSPITAL": "assets/signs/hospital.mp4",
+        "POLICE": "assets/signs/police.mp4",
+        "FIRE": "assets/signs/fire.mp4",
+        "PAIN": "assets/signs/pain.mp4",
+        "DEAF": "assets/signs/deaf.mp4",
+        "HELP-ME": "assets/signs/help-me.mp4"
+    },
+    "WH-QUESTIONS": {
+        "WHERE": "assets/signs/where.mp4",
+        "WHO": "assets/signs/who.mp4",
+        "WHAT": "assets/signs/what.mp4",
+        "WHY": "assets/signs/why.mp4",
+        "HOW": "assets/signs/how.mp4"
+    }
+}

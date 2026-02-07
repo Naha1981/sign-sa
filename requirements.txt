@@ -1,0 +1,4 @@
+kivy
+mediapipe
+opencv-python
+spacy

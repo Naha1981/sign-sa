@@ -1,0 +1,469 @@
+#:kivy 2.0.0
+#:import C kivy.utils.get_color_from_hex
+
+# --- Design System Constants ---
+#:set color_primary C("#f04c8b")
+#:set color_bg_light C("#f8f6f7")
+#:set color_bg_dark C("#221017")
+#:set color_deep_slate C("#221017")
+#:set color_caution C("#FF8C00")
+#:set color_white C("#FFFFFF")
+#:set color_grey_200 C("#E5E7EB")
+
+# --- Custom Widget Styles ---
+
+<RoundedButton@Button>:
+    background_normal: ''
+    background_color: 0,0,0,0
+    color: color_white
+    bold: True
+    canvas.before:
+        Color:
+            rgba: self.background_color if self.state == 'normal' else [c*0.8 for c in self.background_color]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [20,]
+
+<GlassCard@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.9 if app.theme_cls == 'Light' else 0.1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [15,]
+        Color:
+            rgba: color_primary
+            a: 0.1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+            width: 1
+
+<NavIcon@ButtonBehavior+BoxLayout>:
+    orientation: 'vertical'
+    icon: 'home'
+    text: 'Home'
+    active: False
+    size_hint: None, None
+    size: 50, 50
+    canvas.before:
+        Color:
+            rgba: color_primary if self.active else [0,0,0,0]
+        RoundedRectangle:
+            pos: (self.center_x - 20, self.y + 15)
+            size: (40, 40)
+            radius: [20,]
+    Label:
+        text: root.icon # font_name: 'MaterialSymbols' (If available)
+        color: color_white if root.active else color_grey_200
+        font_size: '24sp'
+        halign: 'center'
+    Label:
+        text: root.text
+        font_size: '10sp'
+        color: color_primary if root.active else color_grey_200
+        bold: True
+
+# --- Screens ---
+
+<HomeScreen>:
+    canvas.before:
+        Color:
+            rgba: color_bg_light
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+
+        # Header
+        BoxLayout:
+            size_hint_y: 0.1
+            Label:
+                text: "SASL Connect"
+                color: color_deep_slate
+                font_size: '20sp'
+                bold: True
+                halign: 'left'
+                text_size: self.size
+
+            Widget: 
+                size_hint_x: 0.8
+            
+            Button:
+                size_hint: None, None
+                size: 40, 40
+                background_normal: ''
+                background_color: 0,0,0,0
+                canvas.after:
+                    Color:
+                        rgba: 1,1,1,1
+                    Ellipse:
+                        pos: self.pos
+                        size: self.size
+                        # source: 'assets/profile_pic.png' # Placeholder
+
+        # 3D Avatar Area
+        GlassCard:
+            size_hint_y: 0.5
+            padding: 10
+            Image:
+                source: 'assets/avatar_placeholder.png' # You would need a placeholder image
+                allow_stretch: True
+                keep_ratio: True
+                
+        # Input Area
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            padding: 5
+            canvas.before:
+                Color:
+                    rgba: color_white
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [30,]
+            
+            TextInput:
+                hint_text: "Type English here..."
+                background_color: 0,0,0,0
+                foreground_color: color_deep_slate
+                multiline: False
+                padding_y: [15, 0]
+                
+            RoundedButton:
+                text: "Mic"
+                size_hint_x: None
+                width: 50
+                background_color: color_primary
+                on_release: app.root.current = 'conversation'
+
+        # Chips
+        ScrollView:
+            size_hint_y: None
+            height: 40
+            BoxLayout:
+                size_hint_x: None
+                width: self.minimum_width
+                spacing: 10
+                RoundedButton:
+                    text: "Hello"
+                    size_hint: None, None
+                    size: 80, 30
+                    background_color: color_grey_200
+                    color: color_deep_slate
+                RoundedButton:
+                    text: "Thank you"
+                    size_hint: None, None
+                    size: 100, 30
+                    background_color: color_grey_200
+                    color: color_deep_slate
+
+        Widget:
+            size_hint_y: 0.1
+
+    # Bottom Nav
+    BoxLayout:
+        size_hint_y: None
+        height: 70
+        padding: [20, 10]
+        pos_hint: {'bottom': 1}
+        canvas.before:
+            Color:
+                rgba: color_white
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [20, 20, 0, 0]
+        
+        NavIcon:
+            text: 'Home'
+            icon: 'H'
+            active: True
+            on_release: root.manager.current = 'home'
+        NavIcon:
+            text: 'Learn'
+            icon: 'L'
+            on_release: root.manager.current = 'learn'
+        NavIcon:
+            text: 'Bridge'
+            icon: 'B'
+            on_release: root.manager.current = 'conversation'
+        NavIcon:
+            text: 'Profile'
+            icon: 'P'
+            on_release: pass
+
+<LearnScreen>:
+    canvas.before:
+        Color:
+            rgba: color_bg_light
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Header
+        BoxLayout:
+            size_hint_y: 0.15
+            padding: 20
+            canvas.before:
+                Color:
+                    rgba: 1,1,1,0.8
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: "SASL Journey\n[size=14sp][color=#f04c8b]Level 2: Explorer[/color][/size]"
+                markup: True
+                color: color_deep_slate
+                bold: True
+        
+        # Path
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: 600
+                padding: 50
+                spacing: 50
+                
+                # Mission Node (Locked)
+                Button:
+                    size_hint: None, None
+                    size: 80, 80
+                    pos_hint: {'center_x': 0.5}
+                    background_normal: ''
+                    background_color: color_grey_200
+                    text: "Lock"
+                
+                # Mission Node (Active)
+                Button:
+                    size_hint: None, None
+                    size: 100, 100
+                    pos_hint: {'center_x': 0.5}
+                    background_normal: ''
+                    background_color: color_primary
+                    text: "PLAY"
+                    bold: True
+                    on_release: root.manager.current = 'learn' # Re-using current cam logic for now
+
+                # Connection Line (Simulated)
+                Widget:
+                    size_hint_y: None
+                    height: 20
+                    canvas:
+                        Color:
+                            rgba: color_grey_200
+                        Line:
+                            points: [self.center_x, self.y, self.center_x, self.y + 100]
+                            width: 2
+                            dash_length: 5
+
+    # Floating Bottom Nav (Should ideally be a separate mixin)
+    Button:
+        text: "Back"
+        size_hint: None, None
+        size: 60, 40
+        pos: 10, 10
+        background_color: color_deep_slate
+        on_release: root.manager.current = 'home'
+
+<ConversationScreen>:
+    canvas.before:
+        Color:
+            rgba: color_deep_slate
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Top Half (Deaf User)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.45
+            padding: 10
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.08, 0.1, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0,0,20,20]
+            
+            Label:
+                text: root.avatar_status
+                font_size: '20sp'
+                halign: 'center'
+                color: color_primary
+
+        # Middle Controls
+        BoxLayout:
+            size_hint_y: 0.1
+            padding: 10
+            spacing: 20
+            
+            RoundedButton:
+                text: "Swap"
+                background_color: color_primary
+                size_hint_x: 0.3
+            
+            Label:
+                text: "Live Transcription"
+                color: color_white
+                font_size: '12sp'
+
+        # Bottom Half (Hearing User)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.45
+            
+            Image:
+                id: camera_feed
+                allow_stretch: True
+                keep_ratio: True
+            
+            BoxLayout:
+                size_hint_y: None
+                height: 80
+                padding: 10
+                spacing: 10
+                canvas.before:
+                    Color:
+                        rgba: 0,0,0,0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: root.chat_log_text
+                    font_size: '12sp'
+                    halign: 'left'
+                    text_size: self.size
+
+                RoundedButton:
+                    text: "MIC"
+                    size_hint_x: None
+                    width: 60
+                    background_color: color_primary if root.is_listening else color_grey_200
+                    on_release: root.toggle_mic()
+
+                RoundedButton:
+                    text: "X"
+                    size_hint_x: None
+                    width: 40
+                    background_color: color_caution
+                    on_release: root.manager.current = 'home'
+
+<SOSScreen>:
+    canvas.before:
+        Color:
+            rgba: color_bg_light
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "EMERGENCY"
+            font_size: '30sp'
+            bold: True
+            color: color_caution
+            size_hint_y: 0.15
+
+        GridLayout:
+            cols: 2
+            spacing: 15
+            
+            RoundedButton:
+                text: "POLICE"
+                background_color: 0, 0, 0.8, 1
+                font_size: '18sp'
+                on_release: root.play_emergency_sign("POLICE")
+            
+            RoundedButton:
+                text: "DOCTOR"
+                background_color: 0, 0.6, 0, 1
+                font_size: '18sp'
+                on_release: root.play_emergency_sign("DOCTOR")
+            
+            RoundedButton:
+                text: "FIRE"
+                background_color: 0.9, 0.4, 0, 1
+                font_size: '18sp'
+                on_release: root.play_emergency_sign("FIRE")
+            
+            RoundedButton:
+                text: "HELP ME"
+                background_color: 0.8, 0, 0, 1
+                font_size: '18sp'
+                on_release: root.play_emergency_sign("HELP-ME")
+
+        RoundedButton:
+            text: "CANCEL"
+            size_hint_y: 0.1
+            background_color: color_deep_slate
+            on_release: root.manager.current = 'home'
+
+<FeedbackScreen>:
+    canvas.before:
+        Color:
+            rgba: color_bg_light
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 15
+        
+        Label:
+            text: "Community Feedback"
+            font_size: '22sp'
+            color: color_deep_slate
+            bold: True
+            size_hint_y: 0.1
+
+        TextInput:
+            id: input_sign
+            hint_text: "Suggest a Sign"
+            size_hint_y: 0.1
+            multiline: False
+        
+        Spinner:
+            id: spinner_prov
+            text: "Select Province"
+            values: ("Gauteng", "Western Cape", "KZN")
+            size_hint_y: 0.1
+            background_color: color_primary
+            
+        TextInput:
+            id: input_note
+            hint_text: "Describe movement..."
+            size_hint_y: 0.3
+            
+        RoundedButton:
+            text: "Submit"
+            size_hint_y: 0.1
+            background_color: color_primary
+            on_release: root.submit_feedback()
+            
+        RoundedButton:
+            text: "Back"
+            size_hint_y: 0.1
+            background_color: color_deep_slate
+            on_release: root.manager.current = 'home'
